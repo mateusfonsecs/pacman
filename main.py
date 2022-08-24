@@ -1,23 +1,50 @@
 import pygame as pg
 import os
 
-imagem_background  = pg.transform.scale(pg.image.load(os.path.join('imgs', 'backg1.jpg')),(500,500))
-imagem_pac  = [pg.transform.scale(pg.image.load(os.path.join('imgs', 'pac1.jpg')),(30,30)),
-                pg.transform.scale(pg.image.load(os.path.join('imgs', 'pac2.jpg')),(30,30)),
-                pg.transform.scale(pg.image.load(os.path.join('imgs', 'pac3.jpg')),(30,30))]
+imagem_background  = pg.image.load(os.path.join('imgs', 'backg2.png'))
+imagem_pac  = [(pg.image.load(os.path.join('imgs', 'pac1.jpg'))),
+                (pg.image.load(os.path.join('imgs', 'pac2.jpg'))),
+                (pg.image.load(os.path.join('imgs', 'pac3.jpg')))]
 imagem_f1  = pg.transform.scale(pg.image.load(os.path.join('imgs', 'fantasma_azul.png')),(30,30))
 imagem_f2  = pg.transform.scale(pg.image.load(os.path.join('imgs', 'fantasma_vermelho.png')),(50,50))
 imagem_f3  = pg.transform.scale(pg.image.load(os.path.join('imgs', 'fantasma_marron.png')),(200,200))
 imagem_f4  = pg.transform.scale(pg.image.load(os.path.join('imgs', 'fantasma_rosa.png')),(200,200))
 
+imagem_p1  = (pg.image.load(os.path.join('imgs', 'rect558.png')))
+imagem_p2  = (pg.image.load(os.path.join('imgs', 'rect631.png')))
+imagem_p3  = (pg.image.load(os.path.join('imgs', 'rect633.png')))
+imagem_p4  = (pg.image.load(os.path.join('imgs', 'rect674.png')))
+imagem_p5  = (pg.image.load(os.path.join('imgs', 'rect631-1.png')))
+imagem_p6  = (pg.image.load(os.path.join('imgs', 'rect568.png')))
+imagem_p7  = (pg.image.load(os.path.join('imgs', 'rect566.png')))
+imagem_p8  = (pg.image.load(os.path.join('imgs', 'rect564.png')))
+imagem_p9  = (pg.image.load(os.path.join('imgs', 'rect560.png')))
+imagem_p10  = (pg.image.load(os.path.join('imgs', 'rect570.png')))
+imagem_p11  = (pg.image.load(os.path.join('imgs', 'rect572.png')))
+imagem_p12  = (pg.image.load(os.path.join('imgs', 'rect576.png')))
+imagem_p13  = (pg.image.load(os.path.join('imgs', 'rect574.png')))
+imagem_p14  = (pg.image.load(os.path.join('imgs', 'rect620.png')))
+imagem_p15  = (pg.image.load(os.path.join('imgs', 'rect622.png')))
+imagem_p16  = (pg.image.load(os.path.join('imgs', 'rect626.png')))
+imagem_p17  = (pg.image.load(os.path.join('imgs', 'rect570-5.png')))
+imagem_p18  = (pg.image.load(os.path.join('imgs', 'rect574-5.png')))
+imagem_p19  = (pg.image.load(os.path.join('imgs', 'rect576-4-2.png')))
+imagem_p20  = (pg.image.load(os.path.join('imgs', 'rect572-0.png')))
+imagem_p21  = (pg.image.load(os.path.join('imgs', 'rect604.png')))
+imagem_p22  = (pg.image.load(os.path.join('imgs', 'rect603.png')))
+imagem_p23  = (pg.image.load(os.path.join('imgs', 'rect572-0-0.png')))
+imagem_p24  = (pg.image.load(os.path.join('imgs', 'rect570-5-3.png')))
+imagem_p25  = (pg.image.load(os.path.join('imgs', 'rect568-2.png')))
 class PAC:
     IMGS = imagem_pac
     Tempo_Animacao = 5
     Rotacao = 90
-    desloc = 5
+    desloc_pac = 5
     def __init__(self,x,y):
         self.x = x
         self.y = y
+        self.x_ant = x
+        self.y_ant = y
         self.angulo = 0
         self.velocidadex = 0
         self.velocidadey = 0
@@ -26,28 +53,28 @@ class PAC:
         self.contagem = 0
 
     def mudar_direita(self):
-        self.velocidadex = self.desloc
+        self.velocidadex = self.desloc_pac
         self.velocidadey = 0
         self.angulo = 0
 
     def mudar_esquerda(self):
-        self.velocidadex = -self.desloc
+        self.velocidadex = -self.desloc_pac
         self.velocidadey = 0
         self.angulo = 180
 
     def mudar_sobe(self):
         self.velocidadex = 0
-        self.velocidadey = -self.desloc
+        self.velocidadey = -self.desloc_pac
         self.angulo = 90
 
     def mudar_desce(self):
         self.velocidadex = 0
-        self.velocidadey = self.desloc
+        self.velocidadey = self.desloc_pac
         self.angulo = -90
 
     def mover(self):
-        self.x += self.velocidadex
-        self.y += self.velocidadey
+        self.x = self.x_ant + self.velocidadex
+        self.y = self.y_ant + self.velocidadey
 
     def desenhar(self,tela):
         self.contagem += 1
@@ -73,40 +100,47 @@ class PAC:
 
 class FANTASMA_1:
     IMGS = imagem_f1
-    desloc = 10
+    desloc = 2
     def __init__(self,x,y):
         self.x = x
         self.y = y
+        self.x_ant = x
+        self.y_ant = y
         self.velocidadex = 0
         self.velocidadey = 0
+        self.angulo = 0
         self.tempo = 0
         self.imagem = self.IMGS
 
     def mudar_direita(self):
         self.velocidadex = self.desloc
         self.velocidadey = 0
+        self.angulo = 0
 
     def mudar_esquerda(self):
         self.velocidadex = -self.desloc
         self.velocidadey = 0
-
+        self.angulo = 180
     def mudar_sobe(self):
         self.velocidadex = 0
         self.velocidadey = -self.desloc
-
+        self.angulo = 90
     def mudar_desce(self):
         self.velocidadex = 0
         self.velocidadey = self.desloc
-
+        self.angulo = -90
     def mover(self):
-        self.x += self.velocidadex
-        self.y += self.velocidadey
+        self.x = self.x_ant + self.velocidadex
+        self.y = self.y_ant + self.velocidadey
 
     def desenhar(self,tela):
         pos_center = self.imagem.get_rect(topleft = (self.x,self.y)).center
         retangulo = self.imagem.get_rect(center = pos_center)
         tela.blit(self.imagem, retangulo)
-    
+        
+    def get_mask(self):
+        return pg.mask.from_surface(self.imagem)
+
     def colidir(self, PAC):
         PAC_mask = PAC.get_mask()
         Fantasma1_mask = pg.mask.from_surface(self.imagem)
@@ -117,20 +151,44 @@ class FANTASMA_1:
             return True
         else:
             return False
+class PAREDE():
 
-def desenhar_tela(tela, PAC, FANSTAMA_1):
+    def __init__(self,x,y,img):
+        self.x = x
+        self.y = y
+        self.imagem = img
+
+    def desenhar(self,tela):
+        pos_center = self.imagem.get_rect(topleft = (self.x,self.y)).center
+        retangulo = self.imagem.get_rect(center = pos_center)
+        tela.blit(self.imagem, retangulo)
+    
+    def colidir(self, PAC):
+        PAC_mask = PAC.get_mask()
+        Fantasma1_mask = pg.mask.from_surface(self.imagem)
+        distancia = (self.x - PAC.x, self.y - PAC.y)
+        Parede_ponto = PAC_mask.overlap(Fantasma1_mask,distancia)
+
+        if Parede_ponto:
+            return True
+        else:
+            return False
+def desenhar_tela(tela, PAC, FANSTAMA_1,paredes):
     tela.blit(imagem_background, (0,0))
     for PAC in PAC:
         PAC.desenhar(tela)
     for FANSTAMA_1 in FANSTAMA_1:
         FANSTAMA_1.desenhar(tela)
+    for parede in paredes:
+        parede.desenhar(tela)
     pg.display.update()
 
 def main():
-    pacs = [PAC(230,230)]
-    fantasmas = [FANTASMA_1(300,300)]
-    tela = pg.display.set_mode((500,500))
+    pacs = [PAC(230,223)]
+    fantasmas = [FANTASMA_1(300,280)]
+    tela = pg.display.set_mode((578,640))
     relogio = pg.time.Clock()
+    paredes = [PAREDE(0,0,imagem_p1), PAREDE(0,624,imagem_p1),PAREDE(0,0,imagem_p2),PAREDE(562,0,imagem_p2),PAREDE(0,190,imagem_p3),PAREDE(0,265,imagem_p3), PAREDE(0,316,imagem_p3),PAREDE(0,390,imagem_p3),PAREDE(462,316,imagem_p3),PAREDE(462,390,imagem_p3),PAREDE(462,190,imagem_p3),PAREDE(462,265,imagem_p3),PAREDE(462,190,imagem_p4),PAREDE(462,316,imagem_p4),PAREDE(100,316,imagem_p4),PAREDE(100,190,imagem_p4),PAREDE(0,391,imagem_p5),PAREDE(562,391,imagem_p5),PAREDE(54,131,imagem_p6),PAREDE(462,131,imagem_p6),PAREDE(54,51,imagem_p7),PAREDE(462,51,imagem_p7),PAREDE(154,51,imagem_p8),PAREDE(335,51,imagem_p8),PAREDE(281,0,imagem_p9),PAREDE(154,131,imagem_p10),PAREDE(400,131,imagem_p10),PAREDE(154,193,imagem_p11),PAREDE(340,193,imagem_p11),PAREDE(275,131,imagem_p12),PAREDE(216,131,imagem_p13),PAREDE(216,255,imagem_p14),PAREDE(348,255,imagem_p14),PAREDE(308,255,imagem_p15),PAREDE(216,255,imagem_p15),PAREDE(216,329,imagem_p16),PAREDE(154,316,imagem_p17),PAREDE(400,316,imagem_p17),PAREDE(216,378,imagem_p18),PAREDE(216,501,imagem_p18),PAREDE(275,378,imagem_p19),PAREDE(275,501,imagem_p19),PAREDE(154,440,imagem_p20),PAREDE(340,440,imagem_p20),PAREDE(54,563,imagem_p21),PAREDE(340,563,imagem_p21),PAREDE(154,501,imagem_p22),PAREDE(400,501,imagem_p22),PAREDE(54,440,imagem_p23),PAREDE(462,440,imagem_p23),PAREDE(92,440,imagem_p24),PAREDE(462,440,imagem_p24),PAREDE(0,501,imagem_p25),PAREDE(524,501,imagem_p25)]
 
     rodando = True
     while rodando:
@@ -181,6 +239,36 @@ def main():
             for i, pac in enumerate(pacs):
                 if fantasma.colidir(pac):
                     pacs.pop(i)
-        desenhar_tela(tela,pacs,fantasmas)
+        for parede in paredes:
+            for i, pac in enumerate(pacs):
+                if parede.colidir(pac):
+                    if pacs[i].angulo == 180:
+                        pacs[i].x += pacs[i].desloc_pac 
+                    if pacs[i].angulo == 90:
+                        pacs[i].y += pacs[i].desloc_pac
+                    if pacs[i].angulo == 0:
+                        pacs[i].x -= pacs[i].desloc_pac
+                    if pacs[i].angulo == -90:
+                        pacs[i].y -= pacs[i].desloc_pac
+                else: 
+                    pacs[i].x_ant = pacs[i].x 
+                    pacs[i].y_ant = pacs[i].y 
+            for i, fantasma in enumerate(fantasmas):
+                if parede.colidir(fantasma):
+                    if fantasmas[i].angulo == 180:
+                        fantasmas[i].x += fantasmas[i].desloc 
+                    if fantasmas[i].angulo == 90:
+                        fantasmas[i].y += fantasmas[i].desloc 
+                    if fantasmas[i].angulo == 0:
+                        fantasmas[i].x -= fantasmas[i].desloc 
+                    if fantasmas[i].angulo == -90:
+                        fantasmas[i].y -= fantasmas[i].desloc 
+                else: 
+                    fantasmas[i].x_ant = fantasmas[i].x 
+                    fantasmas[i].y_ant = fantasmas[i].y 
+            for i, fantasma in enumerate(fantasmas):
+                if parede.colidir(fantasma):
+                    fantasmas.pop(i) 
+        desenhar_tela(tela,pacs,fantasmas,paredes)
 if __name__ == '__main__':
     main()
