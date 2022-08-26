@@ -80,7 +80,47 @@ class PAC:
     def mover(self):
         self.x +=  self.velocidadex
         self.y += self.velocidadey
+    
+    def colidir_direita(self, parede):
+        parede_mask = parede.get_mask()
+        pac_mask = pg.mask.from_surface(self.imagem)
+        distancia = (self.x + self.desloc_pac - parede.x, self.y - parede.y)
+        Parede_ponto = parede_mask.overlap(pac_mask,distancia)
 
+        if Parede_ponto:
+            return True
+        else:
+            return False
+    def colidir_sobe(self, parede):
+        parede_mask = parede.get_mask()
+        pac_mask = pg.mask.from_surface(self.imagem)
+        distancia = (self.x  - parede.x, self.y - self.desloc_pac - parede.y)
+        Parede_ponto = parede_mask.overlap(pac_mask,distancia)
+
+        if Parede_ponto:
+            return True
+        else:
+            return False
+    def colidir_desce(self, parede):
+        parede_mask = parede.get_mask()
+        pac_mask = pg.mask.from_surface(self.imagem)
+        distancia = (self.x  - parede.x, self.y + self.desloc_pac - parede.y)
+        Parede_ponto = parede_mask.overlap(pac_mask,distancia)
+
+        if Parede_ponto:
+            return True
+        else:
+            return False
+    def colidir_esquerda(self, parede):
+        parede_mask = parede.get_mask()
+        pac_mask = pg.mask.from_surface(self.imagem)
+        distancia = (self.x - self.desloc_pac - parede.x, self.y - parede.y)
+        Parede_ponto = parede_mask.overlap(pac_mask,distancia)
+
+        if Parede_ponto:
+            return True
+        else:
+            return False
     def desenhar(self,tela):
         self.contagem += 1
         if self.contagem < self.Tempo_Animacao:
@@ -178,6 +218,9 @@ class PAREDE():
             return True
         else:
             return False
+
+    def get_mask(self):
+        return pg.mask.from_surface(self.imagem)
 def desenhar_tela(tela, PAC, FANSTAMA_1,paredes):
     tela.blit(imagem_background, (0,0))
     for PAC in PAC:
@@ -206,26 +249,48 @@ def main():
                 quit()
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_a:
+                    k = 0
                     for pac in pacs:
-
+                        for i, parede in enumerate(paredes):
+                            if pac.colidir_esquerda(parede):
+                                k = 1
+                    if k == 0: 
                         pac.mudar_esquerda()
-               
+                    else:
+                        pass              
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_s:
+                    k = 0
                     for pac in pacs:
-
+                        for i, parede in enumerate(paredes):
+                            if pac.colidir_desce(parede):
+                                k = 1
+                    if k == 0: 
                         pac.mudar_desce()
+                    else:
+                        pass
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_d:
+                    k = 0
                     for pac in pacs:
-
+                        for i, parede in enumerate(paredes):
+                            if pac.colidir_direita(parede):
+                                k = 1
+                    if k == 0: 
                         pac.mudar_direita()
+                    else:
+                        pass
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_w:
+                    k = 0
                     for pac in pacs:
-
-                        pac.mudar_sobe()   
-
+                        for i, parede in enumerate(paredes):
+                            if pac.colidir_sobe(parede):
+                                k = 1
+                    if k == 0: 
+                        pac.mudar_sobe()
+                    else:
+                        pass
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_LEFT:
                     for fantasma in fantasmas:
