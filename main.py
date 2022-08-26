@@ -45,15 +45,9 @@ class PAC:
     def __init__(self,x,y):
         self.x = x
         self.y = y
-        self.x_ant = x
-        self.y_ant = y
         self.angulo = 0
         self.velocidadex = 0
         self.velocidadey = 0
-        self.velocidadex_ant = 0
-        self.velocidadey_ant = 0
-        self.angulo_ant = 0
-        self.tempo = 0
         self.imagem = self.IMGS[0]
         self.contagem = 0
 
@@ -196,6 +190,46 @@ class FANTASMA_1:
             return True
         else:
             return False
+    def colidir_direita(self, parede):
+        parede_mask = parede.get_mask()
+        fantasma_mask = pg.mask.from_surface(self.imagem)
+        distancia = (self.x + self.desloc - parede.x, self.y - parede.y)
+        Parede_ponto = parede_mask.overlap(fantasma_mask,distancia)
+
+        if Parede_ponto:
+            return True
+        else:
+            return False
+    def colidir_sobe(self, parede):
+        parede_mask = parede.get_mask()
+        fantasma_mask = pg.mask.from_surface(self.imagem)
+        distancia = (self.x  - parede.x, self.y - self.desloc - parede.y)
+        Parede_ponto = parede_mask.overlap(fantasma_mask,distancia)
+
+        if Parede_ponto:
+            return True
+        else:
+            return False
+    def colidir_desce(self, parede):
+        parede_mask = parede.get_mask()
+        fantasma_mask = pg.mask.from_surface(self.imagem)
+        distancia = (self.x  - parede.x, self.y + self.desloc - parede.y)
+        Parede_ponto = parede_mask.overlap(fantasma_mask,distancia)
+
+        if Parede_ponto:
+            return True
+        else:
+            return False
+    def colidir_esquerda(self, parede):
+        parede_mask = parede.get_mask()
+        fantasma_mask = pg.mask.from_surface(self.imagem)
+        distancia = (self.x - self.desloc - parede.x, self.y - parede.y)
+        Parede_ponto = parede_mask.overlap(fantasma_mask,distancia)
+
+        if Parede_ponto:
+            return True
+        else:
+            return False
 class PAREDE():
 
     def __init__(self,x,y,img):
@@ -236,7 +270,7 @@ def main():
     fantasmas = [FANTASMA_1(300,280)]
     tela = pg.display.set_mode((578,640))
     relogio = pg.time.Clock()
-
+#construindo ambiente
     paredes = [PAREDE(0,0,imagem_p1),PAREDE(0,624,imagem_p1),PAREDE(0,0,imagem_p2),PAREDE(562,0,imagem_p2),PAREDE(0,192,imagem_p3),PAREDE(0,266,imagem_p3),PAREDE(458,192,imagem_p3),PAREDE(458,266,imagem_p3),PAREDE(0,316,imagem_p3),PAREDE(0,390,imagem_p3),PAREDE(458,316,imagem_p3),PAREDE(458,390,imagem_p3),PAREDE(50,50,imagem_p4),PAREDE(458,50,imagem_p4),PAREDE(104,192,imagem_p5),PAREDE(458,192,imagem_p5),PAREDE(104,316,imagem_p5),PAREDE(458,316,imagem_p5),PAREDE(0,390,imagem_p6),PAREDE(562,390,imagem_p6),PAREDE(154,50,imagem_p7),PAREDE(331,50,imagem_p7),PAREDE(281,0,imagem_p8),PAREDE(50,126,imagem_p9),PAREDE(458,126,imagem_p9),PAREDE(212,126,imagem_p10),PAREDE(154,126,imagem_p11),PAREDE(400,126,imagem_p11),PAREDE(281,126,imagem_p12),PAREDE(154,192,imagem_p13),PAREDE(331,192,imagem_p13),PAREDE(212,258,imagem_p14),PAREDE(306,258,imagem_p14),PAREDE(212,258,imagem_p15),PAREDE(350,258,imagem_p15),PAREDE(212,329,imagem_p16),PAREDE(154,316,imagem_p17),PAREDE(400,316,imagem_p17),PAREDE(212,379,imagem_p18),PAREDE(212,501,imagem_p18),PAREDE(275,379,imagem_p19),PAREDE(275,501,imagem_p19),PAREDE(154,440,imagem_p20),PAREDE(337,440,imagem_p20),PAREDE(50,440,imagem_p21),PAREDE(458,440,imagem_p21),PAREDE(84,440,imagem_p22),PAREDE(458,440,imagem_p22),PAREDE(0,501,imagem_p23),PAREDE(528,501,imagem_p23),PAREDE(50,562,imagem_p24),PAREDE(337,562,imagem_p24),PAREDE(154,501,imagem_p25),PAREDE(400,501,imagem_p25)]
 
     rodando = True
@@ -291,22 +325,52 @@ def main():
                         pac.mudar_sobe()
                     else:
                         pass
+#comando dos fantasmas
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_LEFT:
+                    k = 0
                     for fantasma in fantasmas:
+                        for i, parede in enumerate(paredes):
+                            if fantasma.colidir_esquerda(parede):
+                                k = 1
+                    if k == 0: 
                         fantasma.mudar_esquerda()
+                    else:
+                        pass    
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_DOWN:
+                    k = 0
                     for fantasma in fantasmas:
+                        for i, parede in enumerate(paredes):
+                            if fantasma.colidir_desce(parede):
+                                k = 1
+                    if k == 0: 
                         fantasma.mudar_desce()
+                    else:
+                        pass    
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_RIGHT:
+                    k = 0
                     for fantasma in fantasmas:
+                        for i, parede in enumerate(paredes):
+                            if fantasma.colidir_direita(parede):
+                                k = 1
+                    if k == 0: 
                         fantasma.mudar_direita()
+                    else:
+                        pass    
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_UP:
+                    k = 0
                     for fantasma in fantasmas:
-                        fantasma.mudar_sobe()     
+                        for i, parede in enumerate(paredes):
+                            if fantasma.colidir_sobe(parede):
+                                k = 1
+                    if k == 0: 
+                        fantasma.mudar_sobe()
+                    else:
+                        pass      
+#movimentar pac e fantasma
         for pac in pacs:
             pac.mover()
         for fantasma in fantasmas:
@@ -315,6 +379,7 @@ def main():
             for i, pac in enumerate(pacs):
                 if fantasma.colidir(pac):
                     pacs.pop(i)
+#verificar colisão com ambientes e restringir movimento    
         for parede in paredes:
             for i, pac in enumerate(pacs):
                 if parede.colidir(pac):                
@@ -326,8 +391,6 @@ def main():
                         pacs[i].x -= pacs[i].desloc_pac
                     if pacs[i].angulo == -90:
                         pacs[i].y -= pacs[i].desloc_pac
- 
-        for parede in paredes:
             for i, fantasma in enumerate(fantasmas):
                 if parede.colidir(fantasma):
                     if fantasmas[i].angulo == 180:
@@ -338,7 +401,7 @@ def main():
                         fantasmas[i].x -= fantasmas[i].desloc 
                     if fantasmas[i].angulo == -90:
                         fantasmas[i].y -= fantasmas[i].desloc 
-
+#verificar colisão de pac e fantasmas
             for i, fantasma in enumerate(fantasmas):
                 if parede.colidir(fantasma):
                     fantasmas.pop(i) 
