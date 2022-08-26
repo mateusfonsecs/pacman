@@ -1,11 +1,12 @@
-from turtle import goto
 import pygame as pg
 import os
 
+#imagens dos objetos 
 imagem_background  = pg.image.load(os.path.join('imgs', 'backg2.png'))
 imagem_pac  = [(pg.image.load(os.path.join('imgs', 'pac1.jpg'))),
                 (pg.image.load(os.path.join('imgs', 'pac2.jpg'))),
                 (pg.image.load(os.path.join('imgs', 'pac3.jpg')))]
+
 imagem_f1  = pg.transform.scale(pg.image.load(os.path.join('imgs', 'fantasma_azul.png')),(30,30))
 imagem_f2  = pg.transform.scale(pg.image.load(os.path.join('imgs', 'fantasma_vermelho.png')),(30,30))
 imagem_f3  = pg.transform.scale(pg.image.load(os.path.join('imgs', 'fantasma_marron.png')),(30,30))
@@ -36,7 +37,7 @@ imagem_p22 = (pg.image.load(os.path.join('imgs', 'rect570-5-3.png')))
 imagem_p23 = (pg.image.load(os.path.join('imgs', 'rect568-2.png')))
 imagem_p24 = (pg.image.load(os.path.join('imgs', 'rect604.png')))
 imagem_p25 = (pg.image.load(os.path.join('imgs', 'rect603.png')))
-
+#classe de pac
 class PAC:
     IMGS = imagem_pac
     Tempo_Animacao = 5
@@ -50,7 +51,7 @@ class PAC:
         self.velocidadey = 0
         self.imagem = self.IMGS[0]
         self.contagem = 0
-
+#funções para mudar trajetória do pac
     def mudar_direita(self):
         self.velocidadex = self.desloc_pac
         self.velocidadey = 0
@@ -79,7 +80,7 @@ class PAC:
         elif self.x > 578:
             self.x = 0
         else: pass
-    
+#identificar possíveis colisões com paredes     
     def colidir_direita(self, parede):
         parede_mask = parede.get_mask()
         pac_mask = pg.mask.from_surface(self.imagem)
@@ -120,6 +121,7 @@ class PAC:
             return True
         else:
             return False
+#desenhar pac e reproduzir abertura e fechamento da boca, assim como girar pac
     def desenhar(self,tela):
         self.contagem += 1
         if self.contagem < self.Tempo_Animacao:
@@ -141,26 +143,22 @@ class PAC:
     
     def get_mask(self):
         return pg.mask.from_surface(self.imagem)
-
+#classe de fantasma
 class FANTASMA_1:
     IMGS = imagem_f5
     desloc = 5
     def __init__(self,x,y):
         self.x = x
         self.y = y
-        self.x_ant = x
-        self.y_ant = y
         self.velocidadex = 0
         self.velocidadey = 0
         self.angulo = 0
-        self.tempo = 0
         self.imagem = self.IMGS
-
+#Mudar trajetória do fantasma
     def mudar_direita(self):
         self.velocidadex = self.desloc
         self.velocidadey = 0
         self.angulo = 0
-
     def mudar_esquerda(self):
         self.velocidadex = -self.desloc
         self.velocidadey = 0
@@ -191,6 +189,7 @@ class FANTASMA_1:
     def get_mask(self):
         return pg.mask.from_surface(self.imagem)
 
+#identificar colisão de pac e fantasmas 
     def colidir(self, PAC):
         PAC_mask = PAC.get_mask()
         Fantasma1_mask = pg.mask.from_surface(self.imagem)
@@ -201,6 +200,7 @@ class FANTASMA_1:
             return True
         else:
             return False
+#identificar possíveis colisões com paredes  
     def colidir_direita(self, parede):
         parede_mask = parede.get_mask()
         fantasma_mask = pg.mask.from_surface(self.imagem)
@@ -241,18 +241,18 @@ class FANTASMA_1:
             return True
         else:
             return False
+#classe de parede
 class PAREDE():
-
     def __init__(self,x,y,img):
         self.x = x
         self.y = y
         self.imagem = img
-
+#desehar parede
     def desenhar(self,tela):
         pos_center = self.imagem.get_rect(topleft = (self.x,self.y)).center
         retangulo = self.imagem.get_rect(center = pos_center)
         tela.blit(self.imagem, retangulo)
-    
+#identificar colisões com paredes    
     def colidir(self, PAC):
         PAC_mask = PAC.get_mask()
         Fantasma1_mask = pg.mask.from_surface(self.imagem)
@@ -266,7 +266,9 @@ class PAREDE():
 
     def get_mask(self):
         return pg.mask.from_surface(self.imagem)
-def desenhar_tela(tela, PAC, FANSTAMA_1,paredes):
+
+#função para desenhar objetos do jogo
+def desenhar_tela(tela, PAC, FANSTAMA_1, paredes):
     tela.blit(imagem_background, (0,0))
     for PAC in PAC:
         PAC.desenhar(tela)
@@ -277,8 +279,9 @@ def desenhar_tela(tela, PAC, FANSTAMA_1,paredes):
     pg.display.update()
 
 def main():
-    pacs = [PAC(230,223)]
-    fantasmas = [FANTASMA_1(300,280)]
+#criando pacs e fantasmas com devida posição inicial
+    pacs = [PAC(0,285)]
+    fantasmas = [FANTASMA_1(272,285)]
     tela = pg.display.set_mode((578,640))
     relogio = pg.time.Clock()
 #construindo ambiente
@@ -286,12 +289,15 @@ def main():
 
     rodando = True
     while rodando:
+#frames por segundo
         relogio.tick(60)
+#identificar saída da partida
         for evento in pg.event.get():
             if evento.type == pg.QUIT:
                 rodando = False
                 pg.quit()
                 quit()
+#comando dos pacs
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_a:
                     k = 0
@@ -299,10 +305,10 @@ def main():
                         for i, parede in enumerate(paredes):
                             if pac.colidir_esquerda(parede):
                                 k = 1
-                    if k == 0: 
-                        pac.mudar_esquerda()
-                    else:
-                        pass              
+                        if k == 0: 
+                            pac.mudar_esquerda()
+                        else:
+                            pass              
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_s:
                     k = 0
@@ -310,10 +316,10 @@ def main():
                         for i, parede in enumerate(paredes):
                             if pac.colidir_desce(parede):
                                 k = 1
-                    if k == 0: 
-                        pac.mudar_desce()
-                    else:
-                        pass
+                        if k == 0: 
+                            pac.mudar_desce()
+                        else:
+                            pass
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_d:
                     k = 0
@@ -321,10 +327,10 @@ def main():
                         for i, parede in enumerate(paredes):
                             if pac.colidir_direita(parede):
                                 k = 1
-                    if k == 0: 
-                        pac.mudar_direita()
-                    else:
-                        pass
+                        if k == 0: 
+                            pac.mudar_direita()
+                        else:
+                            pass
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_w:
                     k = 0
@@ -332,10 +338,10 @@ def main():
                         for i, parede in enumerate(paredes):
                             if pac.colidir_sobe(parede):
                                 k = 1
-                    if k == 0: 
-                        pac.mudar_sobe()
-                    else:
-                        pass
+                        if k == 0: 
+                            pac.mudar_sobe()
+                        else:
+                            pass
 #comando dos fantasmas
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_LEFT:
@@ -344,10 +350,10 @@ def main():
                         for i, parede in enumerate(paredes):
                             if fantasma.colidir_esquerda(parede):
                                 k = 1
-                    if k == 0: 
-                        fantasma.mudar_esquerda()
-                    else:
-                        pass    
+                        if k == 0: 
+                            fantasma.mudar_esquerda()
+                        else:
+                            pass    
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_DOWN:
                     k = 0
@@ -355,10 +361,10 @@ def main():
                         for i, parede in enumerate(paredes):
                             if fantasma.colidir_desce(parede):
                                 k = 1
-                    if k == 0: 
-                        fantasma.mudar_desce()
-                    else:
-                        pass    
+                        if k == 0: 
+                            fantasma.mudar_desce()
+                        else:
+                            pass    
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_RIGHT:
                     k = 0
@@ -366,10 +372,10 @@ def main():
                         for i, parede in enumerate(paredes):
                             if fantasma.colidir_direita(parede):
                                 k = 1
-                    if k == 0: 
-                        fantasma.mudar_direita()
-                    else:
-                        pass    
+                        if k == 0: 
+                            fantasma.mudar_direita()
+                        else:
+                            pass    
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_UP:
                     k = 0
@@ -377,10 +383,10 @@ def main():
                         for i, parede in enumerate(paredes):
                             if fantasma.colidir_sobe(parede):
                                 k = 1
-                    if k == 0: 
-                        fantasma.mudar_sobe()
-                    else:
-                        pass      
+                        if k == 0: 
+                            fantasma.mudar_sobe()
+                        else:
+                            pass      
 #movimentar pac e fantasma
         for pac in pacs:
             pac.mover()
@@ -417,5 +423,6 @@ def main():
                 if parede.colidir(fantasma):
                     fantasmas.pop(i) 
         desenhar_tela(tela,pacs,fantasmas,paredes)
+
 if __name__ == '__main__':
     main()
