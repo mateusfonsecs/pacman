@@ -143,6 +143,33 @@ class PAC:
     
     def get_mask(self):
         return pg.mask.from_surface(self.imagem)
+    def decidir(self, paredes, p):    
+        k = 0
+
+        for i, parede in enumerate(paredes):
+            if p == 1:
+                if self.colidir_esquerda(parede):
+                    k = 1
+            elif p == 2:
+                if self.colidir_direita(parede):
+                    k = 1
+            elif p == 3:
+                if self.colidir_desce(parede):
+                    k = 1
+            else:
+                if self.colidir_sobe(parede):
+                    k = 1                       
+        if k == 0: 
+            if p == 1:
+                self.mudar_esquerda()
+            elif p == 2:
+                self.mudar_direita()
+            elif p == 3:
+                self.mudar_desce()
+            else:
+                self.mudar_sobe()
+        else:
+            pass   
 #classe de fantasma
 class FANTASMA_1:
     IMGS = imagem_f5
@@ -241,6 +268,32 @@ class FANTASMA_1:
             return True
         else:
             return False
+    def decidir(self, paredes, p):    
+        k = 0
+        for i, parede in enumerate(paredes):
+            if p == 1:
+                if self.colidir_esquerda(parede):
+                    k = 1
+            elif p == 2:
+                if self.colidir_direita(parede):
+                    k = 1
+            elif p == 3:
+                if self.colidir_desce(parede):
+                    k = 1
+            else:
+                if self.colidir_sobe(parede):
+                    k = 1                       
+        if k == 0: 
+            if p == 1:
+                self.mudar_esquerda()
+            elif p == 2:
+                self.mudar_direita()
+            elif p == 3:
+                self.mudar_desce()
+            else:
+                self.mudar_sobe()
+        else:
+            pass   
 #classe de parede
 class PAREDE():
     def __init__(self,x,y,img):
@@ -300,93 +353,29 @@ def main():
 #comando dos pacs
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_a:
-                    k = 0
-                    for pac in pacs:
-                        for i, parede in enumerate(paredes):
-                            if pac.colidir_esquerda(parede):
-                                k = 1
-                        if k == 0: 
-                            pac.mudar_esquerda()
-                        else:
-                            pass              
+                    pac.decidir(paredes,1)             
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_s:
-                    k = 0
-                    for pac in pacs:
-                        for i, parede in enumerate(paredes):
-                            if pac.colidir_desce(parede):
-                                k = 1
-                        if k == 0: 
-                            pac.mudar_desce()
-                        else:
-                            pass
+                    pac.decidir(paredes,3)
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_d:
-                    k = 0
-                    for pac in pacs:
-                        for i, parede in enumerate(paredes):
-                            if pac.colidir_direita(parede):
-                                k = 1
-                        if k == 0: 
-                            pac.mudar_direita()
-                        else:
-                            pass
+                    pac.decidir(paredes,2)
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_w:
-                    k = 0
-                    for pac in pacs:
-                        for i, parede in enumerate(paredes):
-                            if pac.colidir_sobe(parede):
-                                k = 1
-                        if k == 0: 
-                            pac.mudar_sobe()
-                        else:
-                            pass
+                    pac.decidir(paredes,4)
 #comando dos fantasmas
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_LEFT:
-                    k = 0
-                    for fantasma in fantasmas:
-                        for i, parede in enumerate(paredes):
-                            if fantasma.colidir_esquerda(parede):
-                                k = 1
-                        if k == 0: 
-                            fantasma.mudar_esquerda()
-                        else:
-                            pass    
+                    fantasma.decidir(paredes,1)  
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_DOWN:
-                    k = 0
-                    for fantasma in fantasmas:
-                        for i, parede in enumerate(paredes):
-                            if fantasma.colidir_desce(parede):
-                                k = 1
-                        if k == 0: 
-                            fantasma.mudar_desce()
-                        else:
-                            pass    
+                    fantasma.decidir(paredes,3)      
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_RIGHT:
-                    k = 0
-                    for fantasma in fantasmas:
-                        for i, parede in enumerate(paredes):
-                            if fantasma.colidir_direita(parede):
-                                k = 1
-                        if k == 0: 
-                            fantasma.mudar_direita()
-                        else:
-                            pass    
+                    fantasma.decidir(paredes,2)  
             if evento.type == pg.KEYDOWN:
                 if evento.key == pg.K_UP:
-                    k = 0
-                    for fantasma in fantasmas:
-                        for i, parede in enumerate(paredes):
-                            if fantasma.colidir_sobe(parede):
-                                k = 1
-                        if k == 0: 
-                            fantasma.mudar_sobe()
-                        else:
-                            pass      
+                    fantasma.decidir(paredes,4)  
 #movimentar pac e fantasma
         for pac in pacs:
             pac.mover()
@@ -418,10 +407,8 @@ def main():
                         fantasmas[i].x -= fantasmas[i].desloc 
                     if fantasmas[i].angulo == -90:
                         fantasmas[i].y -= fantasmas[i].desloc 
-#verificar colisão de pac e fantasmas
-            for i, fantasma in enumerate(fantasmas):
-                if parede.colidir(fantasma):
-                    fantasmas.pop(i) 
+
+ 
         desenhar_tela(tela,pacs,fantasmas,paredes)
 
 if __name__ == '__main__':
