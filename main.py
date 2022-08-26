@@ -74,6 +74,11 @@ class PAC:
     def mover(self):
         self.x +=  self.velocidadex
         self.y += self.velocidadey
+        if self.x < 0:
+            self.x = 578
+        elif self.x > 578:
+            self.x = 0
+        else: pass
     
     def colidir_direita(self, parede):
         parede_mask = parede.get_mask()
@@ -171,6 +176,12 @@ class FANTASMA_1:
     def mover(self):
         self.x += self.velocidadex
         self.y += self.velocidadey
+        if self.x < 0:
+            self.x = 578
+        elif self.x > 578:
+            self.x = 0
+        else: 
+            pass
 
     def desenhar(self,tela):
         pos_center = self.imagem.get_rect(topleft = (self.x,self.y)).center
