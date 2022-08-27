@@ -11,7 +11,7 @@ imagem_f1  = pg.transform.scale(pg.image.load(os.path.join('imgs', 'fantasma_azu
 imagem_f2  = pg.transform.scale(pg.image.load(os.path.join('imgs', 'fantasma_vermelho.png')),(30,30))
 imagem_f3  = pg.transform.scale(pg.image.load(os.path.join('imgs', 'fantasma_marron.png')),(30,30))
 imagem_f4  = pg.transform.scale(pg.image.load(os.path.join('imgs', 'fantasma_rosa.png')),(30,30))
-imagem_f5  = pg.transform.scale(pg.image.load(os.path.join('imgs', 'fantasma_doidao.png')),(30,30))
+imagem_f5  = pg.transform.scale(pg.image.load(os.path.join('imgs', 'fantasma_doidao.png')),(25,25))
 imagem_p1  = (pg.image.load(os.path.join('imgs', 'rect558.png')))
 imagem_p2  = (pg.image.load(os.path.join('imgs', 'rect631.png')))
 imagem_p3  = (pg.image.load(os.path.join('imgs', 'rect633.png')))
@@ -95,7 +95,7 @@ class PAC:
     def colidir_direita(self, parede):
         parede_mask = parede.get_mask()
         pac_mask = pg.mask.from_surface(self.imagem)
-        distancia = (self.x + self.desloc_pac - parede.x, self.y - parede.y)
+        distancia = (self.x + self.desloc_pac   - parede.x, self.y - parede.y)
         Parede_ponto = parede_mask.overlap(pac_mask,distancia)
 
         if Parede_ponto:
@@ -263,7 +263,7 @@ class FANTASMA_1:
     def colidir_direita(self, parede):
         parede_mask = parede.get_mask()
         fantasma_mask = pg.mask.from_surface(self.imagem)
-        distancia = (self.x + self.desloc - parede.x, self.y - parede.y)
+        distancia = (self.x + self.desloc + 4 - parede.x, self.y - parede.y)
         Parede_ponto = parede_mask.overlap(fantasma_mask,distancia)
 
         if Parede_ponto:
@@ -273,7 +273,7 @@ class FANTASMA_1:
     def colidir_sobe(self, parede):
         parede_mask = parede.get_mask()
         fantasma_mask = pg.mask.from_surface(self.imagem)
-        distancia = (self.x  - parede.x, self.y - self.desloc - parede.y)
+        distancia = (self.x  - parede.x, self.y - self.desloc - 4  - parede.y)
         Parede_ponto = parede_mask.overlap(fantasma_mask,distancia)
 
         if Parede_ponto:
@@ -283,7 +283,7 @@ class FANTASMA_1:
     def colidir_desce(self, parede):
         parede_mask = parede.get_mask()
         fantasma_mask = pg.mask.from_surface(self.imagem)
-        distancia = (self.x  - parede.x, self.y + self.desloc - parede.y)
+        distancia = (self.x  - parede.x, self.y + self.desloc + 4 - parede.y)
         Parede_ponto = parede_mask.overlap(fantasma_mask,distancia)
 
         if Parede_ponto:
@@ -293,7 +293,7 @@ class FANTASMA_1:
     def colidir_esquerda(self, parede):
         parede_mask = parede.get_mask()
         fantasma_mask = pg.mask.from_surface(self.imagem)
-        distancia = (self.x - self.desloc - parede.x, self.y - parede.y)
+        distancia = (self.x - self.desloc -4 - parede.x, self.y - parede.y)
         Parede_ponto = parede_mask.overlap(fantasma_mask,distancia)
 
         if Parede_ponto:
