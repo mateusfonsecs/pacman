@@ -72,7 +72,7 @@ class PAC:
         self.velocidadey = self.desloc_pac
         self.angulo = -90
 
-    def mover(self):
+    def mover(self, paredes):
         self.x +=  self.velocidadex
         self.y += self.velocidadey
         if self.x < 0:
@@ -80,6 +80,17 @@ class PAC:
         elif self.x > 578:
             self.x = 0
         else: pass
+        for parede in paredes:
+            if self.colidir_parede(parede):
+                if self.angulo == 180:
+                    self.x += self.desloc_pac 
+                if self.angulo == 90:
+                    self.y += self.desloc_pac
+                if self.angulo == 0:
+                    self.x -= self.desloc_pac
+                if self.angulo == -90:
+                    self.y -= self.desloc_pac
+
 #identificar possíveis colisões com paredes     
     def colidir_direita(self, parede):
         parede_mask = parede.get_mask()
@@ -115,6 +126,17 @@ class PAC:
         parede_mask = parede.get_mask()
         pac_mask = pg.mask.from_surface(self.imagem)
         distancia = (self.x - self.desloc_pac - parede.x, self.y - parede.y)
+        Parede_ponto = parede_mask.overlap(pac_mask,distancia)
+
+        if Parede_ponto:
+            return True
+        else:
+            return False
+    
+    def colidir_parede(self, parede):
+        parede_mask = parede.get_mask()
+        pac_mask = pg.mask.from_surface(self.imagem)
+        distancia = (self.x  - parede.x, self.y  - parede.y)
         Parede_ponto = parede_mask.overlap(pac_mask,distancia)
 
         if Parede_ponto:
@@ -198,7 +220,7 @@ class FANTASMA_1:
         self.velocidadex = 0
         self.velocidadey = self.desloc
         self.angulo = -90
-    def mover(self):
+    def mover(self, paredes):
         self.x += self.velocidadex
         self.y += self.velocidadey
         if self.x < 0:
@@ -207,6 +229,16 @@ class FANTASMA_1:
             self.x = 0
         else: 
             pass
+        for parede in paredes:
+            if self.colidir_parede(parede):
+                if self.angulo == 180:
+                    self.x += self.desloc
+                if self.angulo == 90:
+                    self.y += self.desloc
+                if self.angulo == 0:
+                    self.x -= self.desloc
+                if self.angulo == -90:
+                    self.y -= self.desloc
 
     def desenhar(self,tela):
         pos_center = self.imagem.get_rect(topleft = (self.x,self.y)).center
@@ -263,6 +295,16 @@ class FANTASMA_1:
         fantasma_mask = pg.mask.from_surface(self.imagem)
         distancia = (self.x - self.desloc - parede.x, self.y - parede.y)
         Parede_ponto = parede_mask.overlap(fantasma_mask,distancia)
+
+        if Parede_ponto:
+            return True
+        else:
+            return False
+    def colidir_parede(self, parede):
+        parede_mask = parede.get_mask()
+        pac_mask = pg.mask.from_surface(self.imagem)
+        distancia = (self.x  - parede.x, self.y  - parede.y)
+        Parede_ponto = parede_mask.overlap(pac_mask,distancia)
 
         if Parede_ponto:
             return True
@@ -378,36 +420,14 @@ def main():
                     fantasma.decidir(paredes,4)  
 #movimentar pac e fantasma
         for pac in pacs:
-            pac.mover()
+            pac.mover(paredes)
         for fantasma in fantasmas:
-            fantasma.mover()
+            fantasma.mover(paredes)
         for fantasma in fantasmas:
             for i, pac in enumerate(pacs):
                 if fantasma.colidir(pac):
                     pacs.pop(i)
 #verificar colisão com ambientes e restringir movimento    
-        for parede in paredes:
-            for i, pac in enumerate(pacs):
-                if parede.colidir(pac):                
-                    if pacs[i].angulo == 180:
-                        pacs[i].x += pacs[i].desloc_pac 
-                    if pacs[i].angulo == 90:
-                        pacs[i].y += pacs[i].desloc_pac
-                    if pacs[i].angulo == 0:
-                        pacs[i].x -= pacs[i].desloc_pac
-                    if pacs[i].angulo == -90:
-                        pacs[i].y -= pacs[i].desloc_pac
-            for i, fantasma in enumerate(fantasmas):
-                if parede.colidir(fantasma):
-                    if fantasmas[i].angulo == 180:
-                        fantasmas[i].x += fantasmas[i].desloc 
-                    if fantasmas[i].angulo == 90:
-                        fantasmas[i].y += fantasmas[i].desloc 
-                    if fantasmas[i].angulo == 0:
-                        fantasmas[i].x -= fantasmas[i].desloc 
-                    if fantasmas[i].angulo == -90:
-                        fantasmas[i].y -= fantasmas[i].desloc 
-
  
         desenhar_tela(tela,pacs,fantasmas,paredes)
 
